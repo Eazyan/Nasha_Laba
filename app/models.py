@@ -1,44 +1,46 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, Time, DateTime
+from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
-from sqlalchemy.sql import func
 from .database import Base
 
+# Модель для пользователя
 class User(Base):
     __tablename__ = "users"
+    
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String, unique=True, index=True)
-    password = Column(String)  # Сохраняем хэш пароля, а не сам пароль
-    role = Column(String)  # Роль: admin, user, observer
+    email = Column(String, unique=True, index=True)
+    password_hash = Column(String)  # Хешированный пароль
+
+    bookings = relationship("Booking", back_populates="user")  # Связь с бронированиями
 
 class Equipment(Base):
     __tablename__ = "equipments"
+    
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
     description = Column(String)
-    availability_start = Column(Time)
-    availability_end = Column(Time)
 
+    time_slots = relationship("TimeSlot", back_populates="equipment")  # Связь с временными слотами
+
+class TimeSlot(Base):
+    __tablename__ = "time_slots"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    equipment_id = Column(Integer, ForeignKey("equipments.id"))
+    start_time = Column(String)  # Время начала
+    end_time = Column(String)  # Время окончания
+    
+    equipment = relationship("Equipment", back_populates="time_slots")
+    bookings = relationship("Booking", back_populates="time_slot")  # Связь с бронированиями
+
+
+# Модель для бронирований
 class Booking(Base):
     __tablename__ = "bookings"
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
-    equipment_id = Column(Integer, ForeignKey("equipments.id"))
-    start_time = Column(DateTime, default=func.now())
-    end_time = Column(DateTime)
-    is_active = Column(Boolean, default=True)
     
-    user = relationship("User", back_populates="bookings")
-    equipment = relationship("Equipment", back_populates="bookings")
-
-User.bookings = relationship("Booking", back_populates="user")
-Equipment.bookings = relationship("Booking", back_populates="equipment")
-
-class Checklist(Base):
-    __tablename__ = "checklists"
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
-    equipment_id = Column(Integer, ForeignKey("equipments.id"))
-    steps = Column(String)  # Это будет строка, где описан весь процесс выполнения эксперимента
-
-    user = relationship("User")
-    equipment = relationship("Equipment")
+    time_slot_id = Column(Integer, ForeignKey("time_slots.id"))
+    
+    user = relationship("User", back_populates="bookings")  # Связь с пользователем
+    time_slot = relationship("TimeSlot", back_populates="bookings")  # Связь с временным слотом

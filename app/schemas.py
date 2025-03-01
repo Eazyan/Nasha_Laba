@@ -1,49 +1,66 @@
 from pydantic import BaseModel
-from datetime import time, datetime
 from typing import List, Optional
 
-# Схема для оборудования
-class EquipmentBase(BaseModel):
+class UserCreate(BaseModel):
+    username: str
+    email: str
+    password_hash: str  # Хешированный пароль
+
+    class Config:
+        orm_mode = True
+
+class User(BaseModel):
+    id: int
+    username: str
+    email: str
+
+    class Config:
+        orm_mode = True
+
+class EquipmentCreate(BaseModel):
     name: str
     description: str
-    availability_start: time
-    availability_end: time
-
-class EquipmentCreate(EquipmentBase):
-    pass
-
-class Equipment(EquipmentBase):
-    id: int
 
     class Config:
         orm_mode = True
 
-# Схема для пользователя
-class UserBase(BaseModel):
-    username: str
-
-class UserCreate(UserBase):
-    password: str  # Здесь храним пароль для создания
-
-class User(UserBase):
+class Equipment(BaseModel):
     id: int
-    role: str
+    name: str
+    description: str
 
     class Config:
         orm_mode = True
 
-# Схема для бронирования
-class BookingBase(BaseModel):
-    user_id: int
+class TimeSlotCreate(BaseModel):
     equipment_id: int
-    start_time: datetime
-    end_time: datetime
+    start_time: str  # Время начала
+    end_time: str    # Время окончания
 
-class BookingCreate(BookingBase):
-    pass
+    class Config:
+        orm_mode = True
 
-class Booking(BookingBase):
+class TimeSlot(BaseModel):
     id: int
+    equipment_id: int
+    start_time: str  # Теперь это строка
+    end_time: str    # Теперь это строка
+
+    class Config:
+        orm_mode = True
+
+
+class BookingCreate(BaseModel):
+    user_id: int
+    time_slot_id: int
+
+    class Config:
+        orm_mode = True
+
+class Booking(BaseModel):
+    id: int
+    user_id: int
+    time_slot_id: int
 
     class Config:
         orm_mode = True

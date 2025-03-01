@@ -1,20 +1,27 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 function BookingForm() {
-  const [userId, setUserId] = useState("");
-  const [equipmentId, setEquipmentId] = useState("");
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
+  const [timeSlots, setTimeSlots] = useState([]);
+  const [userName, setUserName] = useState("");
+  const [selectedSlot, setSelectedSlot] = useState("");
+
+  useEffect(() => {
+    axios.get("http://127.0.0.1:8000/time-slots/")
+      .then((response) => {
+        setTimeSlots(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching time slots:", error);
+      });
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const newBooking = {
-      user_id: userId,
-      equipment_id: equipmentId,
-      start_time: startTime,
-      end_time: endTime,
+      user_name: userName,
+      time_slot_id: selectedSlot,
     };
 
     axios
@@ -29,41 +36,31 @@ function BookingForm() {
 
   return (
     <div>
-      <h1>Book Equipment</h1>
+      <h1>Забронировать прибор</h1>
       <form onSubmit={handleSubmit}>
-        <label>User ID:</label>
+        <label>Имя:</label>
         <input
           type="text"
-          value={userId}
-          onChange={(e) => setUserId(e.target.value)}
+          value={userName}
+          onChange={(e) => setUserName(e.target.value)}
           required
         />
         <br />
-        <label>Equipment ID:</label>
-        <input
-          type="text"
-          value={equipmentId}
-          onChange={(e) => setEquipmentId(e.target.value)}
+        <label>Выберите временной слот:</label>
+        <select
+          value={selectedSlot}
+          onChange={(e) => setSelectedSlot(e.target.value)}
           required
-        />
+        >
+          <option value="">Выберите слот</option>
+          {timeSlots.map((slot) => (
+            <option key={slot.id} value={slot.id}>
+              {`${slot.start_time} - ${slot.end_time}`}
+            </option>
+          ))}
+        </select>
         <br />
-        <label>Start Time:</label>
-        <input
-          type="datetime-local"
-          value={startTime}
-          onChange={(e) => setStartTime(e.target.value)}
-          required
-        />
-        <br />
-        <label>End Time:</label>
-        <input
-          type="datetime-local"
-          value={endTime}
-          onChange={(e) => setEndTime(e.target.value)}
-          required
-        />
-        <br />
-        <button type="submit">Book Equipment</button>
+        <button type="submit">Забронировать</button>
       </form>
     </div>
   );

@@ -3,6 +3,7 @@ import axios from "axios";
 
 function UserForm() {
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = (e) => {
@@ -10,13 +11,14 @@ function UserForm() {
 
     const newUser = {
       username,
-      password,
+      email,
+      password_hash: password,  // Передаем захешированный пароль, если нужно
     };
 
     axios
       .post("http://127.0.0.1:8000/users/", newUser)
       .then((response) => {
-        alert("User added successfully!");
+        console.log("User created successfully:", response.data);
       })
       .catch((error) => {
         console.error("There was an error adding the user!", error);
@@ -24,28 +26,33 @@ function UserForm() {
   };
 
   return (
-    <div>
-      <h1>Add User</h1>
-      <form onSubmit={handleSubmit}>
-        <label>Username:</label>
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
-        <br />
-        <label>Password:</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <br />
-        <button type="submit">Add User</button>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit}>
+      <label>Username:</label>
+      <input
+        type="text"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        required
+      />
+      <br />
+      <label>Email:</label>
+      <input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+      />
+      <br />
+      <label>Password:</label>
+      <input
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        required
+      />
+      <br />
+      <button type="submit">Create User</button>
+    </form>
   );
 }
 

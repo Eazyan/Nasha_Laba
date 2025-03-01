@@ -13,17 +13,18 @@ function EquipmentForm() {
     const newEquipment = {
       name,
       description,
-      availability_start: availabilityStart,
-      availability_end: availabilityEnd,
+      start_time: availabilityStart,
+      end_time: availabilityEnd
     };
 
+    // Отправка данных на сервер для создания оборудования и временного слота
     axios
-      .post("http://127.0.0.1:8000/equipments/", newEquipment)
+      .post("http://127.0.0.1:8000/equipments_with_slots/", newEquipment)
       .then((response) => {
-        alert("Equipment added successfully!");
+        alert("Equipment and time slot added successfully!");
       })
       .catch((error) => {
-        console.error("There was an error adding the equipment!", error);
+        console.error("There was an error adding the equipment and slot!", error);
       });
   };
 

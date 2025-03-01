@@ -1,41 +1,44 @@
 .timeline {
-  padding: 20px;
-  overflow-x: auto; /* Добавляем горизонтальную прокрутку */
-  -webkit-overflow-scrolling: touch; /* Для плавного скроллинга на мобильных устройствах */
-}
-
-table {
-  width: max-content; /* Позволяет таблице расширяться в зависимости от содержимого */
-  border-collapse: collapse;
-}
-
-th, td {
-  border: 1px solid #ddd;
-  padding: 10px;
-  text-align: center;
-}
-
-th {
-  background-color: #f4f4f4;
-}
-
-.booking-cell {
-  background-color: #ffcccb;
-  color: black;
   position: relative;
-  border-radius: 5px;
+  width: 100%;
+  height: 600px; /* Высота таймлайна */
+  border: 1px solid #ddd;
+  overflow: hidden;
 }
 
-.booking-info {
-  padding: 5px;
+.timeline-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
 }
 
-.booking-info strong {
-  display: block;
+.timeline-hour {
+  width: 6.25%; /* 100% / 16 часов */
+  text-align: center;
   font-weight: bold;
 }
 
-.booking-info p {
-  margin: 0;
+.timeline-body {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.timeline-slot {
+  position: absolute;
+  width: 100%;
+  background-color: rgba(0, 123, 255, 0.7);
+  border-radius: 5px;
+  color: white;
+  padding: 5px;
+  box-sizing: border-box;
+}
+
+.timeline-slot-info {
   font-size: 12px;
+}
+
+.timeline-slot-info strong {
+  display: block;
+  font-size: 14px;
 }
