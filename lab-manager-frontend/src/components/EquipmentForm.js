@@ -6,6 +6,8 @@ function EquipmentForm() {
   const [description, setDescription] = useState("");
   const [availabilityStart, setAvailabilityStart] = useState("");
   const [availabilityEnd, setAvailabilityEnd] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -13,60 +15,74 @@ function EquipmentForm() {
     const newEquipment = {
       name,
       description,
-      start_time: availabilityStart,
-      end_time: availabilityEnd
+      availability_start: availabilityStart,
+      availability_end: availabilityEnd,
+      start_time: startTime,
+      end_time: endTime,
     };
 
-    // Отправка данных на сервер для создания оборудования и временного слота
     axios
-      .post("http://127.0.0.1:8000/equipments_with_slots/", newEquipment)
+      .post("http://127.0.0.1:8000/equipments/", newEquipment)
       .then((response) => {
-        alert("Equipment and time slot added successfully!");
+        alert("Оборудование добавлено!");
       })
       .catch((error) => {
-        console.error("There was an error adding the equipment and slot!", error);
+        console.error("Ошибка при добавлении оборудования", error);
       });
   };
 
   return (
-    <div>
-      <h1>Add Equipment</h1>
-      <form onSubmit={handleSubmit}>
-        <label>Name:</label>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
-        <br />
-        <label>Description:</label>
-        <input
-          type="text"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          required
-        />
-        <br />
-        <label>Availability Start:</label>
-        <input
-          type="time"
-          value={availabilityStart}
-          onChange={(e) => setAvailabilityStart(e.target.value)}
-          required
-        />
-        <br />
-        <label>Availability End:</label>
-        <input
-          type="time"
-          value={availabilityEnd}
-          onChange={(e) => setAvailabilityEnd(e.target.value)}
-          required
-        />
-        <br />
-        <button type="submit">Add Equipment</button>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit}>
+      <label>Название:</label>
+      <input
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        required
+      />
+      <br />
+      <label>Описание:</label>
+      <input
+        type="text"
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        required
+      />
+      <br />
+      <label>Начало доступности:</label>
+      <input
+        type="time"
+        value={availabilityStart}
+        onChange={(e) => setAvailabilityStart(e.target.value)}
+        required
+      />
+      <br />
+      <label>Конец доступности:</label>
+      <input
+        type="time"
+        value={availabilityEnd}
+        onChange={(e) => setAvailabilityEnd(e.target.value)}
+        required
+      />
+      <br />
+      <label>Начало временного слота:</label>
+      <input
+        type="time"
+        value={startTime}
+        onChange={(e) => setStartTime(e.target.value)}
+        required
+      />
+      <br />
+      <label>Конец временного слота:</label>
+      <input
+        type="time"
+        value={endTime}
+        onChange={(e) => setEndTime(e.target.value)}
+        required
+      />
+      <br />
+      <button type="submit">Добавить оборудование</button>
+    </form>
   );
 }
 

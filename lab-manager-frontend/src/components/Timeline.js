@@ -13,7 +13,7 @@ const Timeline = () => {
         setEquipments(response.data);
       })
       .catch((error) => {
-        console.error('Error fetching equipment:', error);
+        console.error('Ошибка при загрузке оборудования:', error);
       });
 
     // Загружаем временные слоты
@@ -22,14 +22,14 @@ const Timeline = () => {
         setTimeSlots(response.data);
       })
       .catch((error) => {
-        console.error('Error fetching time slots:', error);
+        console.error('Ошибка при загрузке временных слотов:', error);
       });
   }, []);
 
   // Форматируем время в HH:MM
   const formatTime = (time) => {
     if (!time) return "00:00";
-    const [hours, minutes] = time.split("T")[1].split(":");
+    const [hours, minutes] = time.split(":");
     return `${hours}:${minutes}`;
   };
 
@@ -38,7 +38,7 @@ const Timeline = () => {
     const [startHour, startMinute] = startTime.split(':').map(Number);
     const [endHour, endMinute] = endTime.split(':').map(Number);
 
-    // Переводим время в минуты с начала дня (начало дня - 08:00)
+    // Переводим время в минуты с начала дня (например, с 08:00)
     const startTotalMinutes = (startHour - 8) * 60 + startMinute;
     const endTotalMinutes = (endHour - 8) * 60 + endMinute;
 
@@ -59,12 +59,9 @@ const Timeline = () => {
 
       <div className="timeline-body">
         {/* Отображаем временные слоты для каждого оборудования */}
-        {timeSlots.map((slot, index) => {
-          const equipment = equipments.find(e => e.id === slot.equipment_id);
-
-          // Получаем стартовое и конечное время из временного слота
-          const startTime = formatTime(slot.start_time);
-          const endTime = formatTime(slot.end_time);
+        {equipments.map((equipment, index) => {
+          const startTime = formatTime(equipment.availability_start);
+          const endTime = formatTime(equipment.availability_end);
 
           // Рассчитываем позицию и высоту карточки
           const { top, height } = calculatePosition(startTime, endTime);
@@ -72,8 +69,8 @@ const Timeline = () => {
           return (
             <div key={index} className="timeline-slot" style={{ top: `${top}px`, height: `${height}px` }}>
               <div className="timeline-slot-info">
-                <strong>{equipment ? equipment.name : 'Loading...'}</strong>
-                <p>{equipment ? equipment.description : 'Loading...'}</p>
+                <strong>{equipment.name}</strong>
+                <p>{equipment.description}</p>
                 <p>{startTime} - {endTime}</p>
               </div>
             </div>

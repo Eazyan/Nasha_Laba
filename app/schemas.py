@@ -1,37 +1,26 @@
 from pydantic import BaseModel
 from typing import List, Optional
 
-class UserCreate(BaseModel):
-    username: str
-    email: str
-    password_hash: str  # Хешированный пароль
-
-    class Config:
-        orm_mode = True
-
-class User(BaseModel):
-    id: int
-    username: str
-    email: str
-
-    class Config:
-        orm_mode = True
 
 class EquipmentCreate(BaseModel):
     name: str
     description: str
+    availability_start: str  # Время начала доступности
+    availability_end: str    # Время окончания доступности
+    start_time: str          # Время начала временного слота
+    end_time: str            # Время окончания временного слота
 
     class Config:
         orm_mode = True
 
-class Equipment(BaseModel):
+class Equipment(EquipmentCreate):
     id: int
-    name: str
-    description: str
 
     class Config:
         orm_mode = True
 
+
+# Схема для создания временного слота
 class TimeSlotCreate(BaseModel):
     equipment_id: int
     start_time: str  # Время начала
@@ -40,16 +29,14 @@ class TimeSlotCreate(BaseModel):
     class Config:
         orm_mode = True
 
-class TimeSlot(BaseModel):
+# Схема для чтения временного слота
+class TimeSlot(TimeSlotCreate):
     id: int
-    equipment_id: int
-    start_time: str  # Теперь это строка
-    end_time: str    # Теперь это строка
 
     class Config:
         orm_mode = True
 
-
+# Схема для создания бронирования
 class BookingCreate(BaseModel):
     user_id: int
     time_slot_id: int
@@ -57,10 +44,9 @@ class BookingCreate(BaseModel):
     class Config:
         orm_mode = True
 
-class Booking(BaseModel):
+# Схема для чтения бронирования
+class Booking(BookingCreate):
     id: int
-    user_id: int
-    time_slot_id: int
 
     class Config:
         orm_mode = True
