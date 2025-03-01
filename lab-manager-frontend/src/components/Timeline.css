@@ -1,0 +1,41 @@
+.timeline {
+  padding: 20px;
+  overflow-x: auto; /* Добавляем горизонтальную прокрутку */
+  -webkit-overflow-scrolling: touch; /* Для плавного скроллинга на мобильных устройствах */
+}
+
+table {
+  width: max-content; /* Позволяет таблице расширяться в зависимости от содержимого */
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+th {
+  background-color: #f4f4f4;
+}
+
+.booking-cell {
+  background-color: #ffcccb;
+  color: black;
+  position: relative;
+  border-radius: 5px;
+}
+
+.booking-info {
+  padding: 5px;
+}
+
+.booking-info strong {
+  display: block;
+  font-weight: bold;
+}
+
+.booking-info p {
+  margin: 0;
+  font-size: 12px;
+}
